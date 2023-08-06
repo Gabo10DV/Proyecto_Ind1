@@ -2,5 +2,6 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-def index():
-    return "Holis"
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
