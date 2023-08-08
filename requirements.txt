@@ -2,7 +2,7 @@ fastapi
 numpy
 pandas
 python-dotenv
-uvicorn==0.22.0
+uvicorn
 scikit-learn
 Flask
 Flask-Cors

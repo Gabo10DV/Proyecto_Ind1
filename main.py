@@ -22,38 +22,38 @@ def read_root():
     return {"Hello": "World"}
 
 @app.get('/genero')
-async def genero(Año: int):
-    df_filtrado = df_juegos[df_juegos['release_year'] == Año]
+async def genero(year: int):
+    df_filtrado = df_juegos[df_juegos['release_year'] == year]
     df_filtrado['genres'] = df_filtrado['genres'].str.replace('\'', '').str.replace('[', '').str.replace(']', '')
     df_generos = df_filtrado['genres'].str.split(', ', expand=True).stack().value_counts().head(5)
     return dict(zip(df_generos.index.tolist(), df_generos.tolist()))
 
 @app.get('/specs')
-async def specs(Año: int):
-    df_filtrado = df_juegos[df_juegos['release_year'] == Año]
+async def specs(year: int):
+    df_filtrado = df_juegos[df_juegos['release_year'] == year]
     df_filtrado['specs']= df_filtrado['specs'].str.replace('\'', '').str.replace('[','').str.replace(']','')
     df_specs = df_filtrado['specs'].str.split(', ', expand=True).stack().value_counts().head(5)
     return dict(zip(df_specs.index.tolist(), df_specs.tolist()))
 
 @app.get('/earlyaccess')
-async def earlyaccess(Año: int):
-    df_filtrado = df_juegos[(df_juegos['release_year'] == Año) & (df_juegos['early_access'] == True)]
+async def earlyaccess(year: int):
+    df_filtrado = df_juegos[(df_juegos['release_year'] == year) & (df_juegos['early_access'] == True)]
     return len(df_filtrado)
 
 @app.get('/juegos')
-async def juegos(Año: str):
-    juegos_lanzados = df_juegos.loc[df_juegos['release_year'] == int(Año), 'app_name'].tolist()
+async def juegos(year: str):
+    juegos_lanzados = df_juegos.loc[df_juegos['release_year'] == int(year), 'app_name'].tolist()
     return juegos_lanzados
 
 @app.get('/sentiment')
-async def sentiment(Año: str):
-    df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(Año)]
+async def sentiment(year: str):
+    df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(year)]
     conteo_sentimientos = df_filtrado['sentiment'].value_counts().to_dict()
     return conteo_sentimientos
 
 @app.get('/metascore')
-async def metascore(Año: str):
-    df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(Año)]
+async def metascore(year: str):
+    df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(year)]
     df_ordenado = df_filtrado.sort_values(by=['metascore'], ascending=False)
     top_5_juegos = df_ordenado.head(5).set_index('app_name')['metascore'].to_dict()
     return top_5_juegos
