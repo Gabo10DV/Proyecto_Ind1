@@ -26,14 +26,14 @@ async def genero(Año: int):
     df_filtrado = df_juegos[df_juegos['release_year'] == Año]
     df_filtrado['genres'] = df_filtrado['genres'].str.replace('\'', '').str.replace('[', '').str.replace(']', '')
     df_generos = df_filtrado['genres'].str.split(', ', expand=True).stack().value_counts().head(5)
-    return df_generos.index.tolist()
+    return dict(zip(df_generos.index.tolist(), df_generos.tolist()))
 
 @app.get('/specs')
 async def specs(Año: int):
     df_filtrado = df_juegos[df_juegos['release_year'] == Año]
     df_filtrado['specs']= df_filtrado['specs'].str.replace('\'', '').str.replace('[','').str.replace(']','')
     df_specs = df_filtrado['specs'].str.split(', ', expand=True).stack().value_counts().head(5)
-    return df_specs.index.tolist()
+    return dict(zip(df_specs.index.tolist(), df_specs.tolist()))
 
 @app.get('/earlyaccess')
 async def earlyaccess(Año: int):
