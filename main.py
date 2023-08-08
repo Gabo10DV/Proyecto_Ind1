@@ -26,37 +26,37 @@ def genero(year: int):
     df_filtrado = df_juegos[df_juegos['release_year'] == year]
     df_filtrado['genres'] = df_filtrado['genres'].str.replace('\'', '').str.replace('[', '').str.replace(']', '')
     df_generos = df_filtrado['genres'].str.split(', ', expand=True).stack().value_counts().head(5)
-    return dict(zip(df_generos.index.tolist(), df_generos.tolist()))
+    return {'generos de juegos':dict(zip(df_generos.index.tolist(), df_generos.tolist()))}
 
 @app.get('/specs')
 def specs(year: int):
     df_filtrado = df_juegos[df_juegos['release_year'] == year]
     df_filtrado['specs']= df_filtrado['specs'].str.replace('\'', '').str.replace('[','').str.replace(']','')
     df_specs = df_filtrado['specs'].str.split(', ', expand=True).stack().value_counts().head(5)
-    return dict(zip(df_specs.index.tolist(), df_specs.tolist()))
+    return {'specs mas comunes':dict(zip(df_specs.index.tolist(), df_specs.tolist()))}
 
 @app.get('/earlyaccess')
 def earlyaccess(year: int):
     df_filtrado = df_juegos[(df_juegos['release_year'] == year) & (df_juegos['early_access'] == True)]
-    return len(df_filtrado)
+    return {len(df_filtrado)}
 
 @app.get('/juegos')
 def juegos(year: str):
     juegos_lanzados = df_juegos.loc[df_juegos['release_year'] == int(year), 'app_name'].tolist()
-    return juegos_lanzados
+    return {'juegos lanzados en el anio':juegos_lanzados}
 
 @app.get('/sentiment')
 def sentiment(year: str):
     df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(year)]
     conteo_sentimientos = df_filtrado['sentiment'].value_counts().to_dict()
-    return conteo_sentimientos
+    return {'sentiment':conteo_sentimientos}
 
 @app.get('/metascore')
 def metascore(year: str):
     df_filtrado = df_juegos.loc[df_juegos['release_year'] == int(year)]
     df_ordenado = df_filtrado.sort_values(by=['metascore'], ascending=False)
     top_5_juegos = df_ordenado.head(5).set_index('app_name')['metascore'].to_dict()
-    return top_5_juegos
+    return {'top 5 mejores juegos': top_5_juegos}
 
 @app.get('/predict')
 def predict(publisher: str, release_year: int, early_access: bool, metascore: float, Indie: bool):
